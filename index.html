@@ -80,8 +80,8 @@
     let velocity = new THREE.Vector3();
     let direction = new THREE.Vector3();
     let canJump = false;
-    const moveSpeed = 10;  // Normalized movement speed
-    const jumpSpeed = 5;
+    const moveSpeed = 20;  // Increased movement speed
+    const jumpSpeed = 10;
 
     const keys = { forward: false, backward: false, left: false, right: false, space: false };
 
@@ -118,7 +118,7 @@
 
     // Ore cubes
     let ores = [];
-    const oreTexture = new THREE.TextureLoader().load('ore.png');  // Correct local path to ore.png on GitHub Pages
+    const oreTexture = new THREE.TextureLoader().load('ore.png');  // Path to ore texture file
     const oreMaterial = new THREE.MeshBasicMaterial({ map: oreTexture });
 
     class Ore {
