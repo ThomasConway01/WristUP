@@ -49,41 +49,40 @@
     document.body.appendChild(renderer.domElement);
 
     // Lighting
-    const light = new THREE.AmbientLight(0xffffff, 0.5);
+    const light = new THREE.AmbientLight(0xffffff, 0.5); // Soft white light
     scene.add(light);
     const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
     directionalLight.position.set(0, 10, 0).normalize();
     scene.add(directionalLight);
 
-    // Ground setup with floor texture
-    const floorTexture = new THREE.TextureLoader().load('floor.png');  // Path to floor texture file
+    // Floor texture loading
+    const floorTexture = new THREE.TextureLoader().load('floor.png', function(texture) {
+      console.log('Floor texture loaded');
+    });
+    floorTexture.minFilter = THREE.LinearFilter;
     const floorMaterial = new THREE.MeshBasicMaterial({ map: floorTexture, side: THREE.DoubleSide });
     const floorGeometry = new THREE.PlaneGeometry(1000, 1000);
     const floor = new THREE.Mesh(floorGeometry, floorMaterial);
-    floor.rotation.x = -Math.PI / 2;
+    floor.rotation.x = -Math.PI / 2; // Rotate to make it horizontal
     scene.add(floor);
 
-    // Camera setup
-    camera.position.set(0, 1.6, 0);  // Start at correct height above ground
+    // Camera position
+    camera.position.set(0, 1.6, 0);  // Camera at the player's height
 
     // Controls setup
     const controls = new THREE.PointerLockControls(camera, document.body);
     scene.add(controls.getObject());
 
-    // To activate pointer lock
-    const lockPointer = () => {
+    // Activate pointer lock on first click
+    document.addEventListener('click', () => {
       document.body.requestPointerLock();
-    };
-
-    document.addEventListener('click', lockPointer, false);  // Trigger on first click
+    });
 
     // Movement speed and controls
     let velocity = new THREE.Vector3();
     let direction = new THREE.Vector3();
-    let canJump = false;
-    const moveSpeed = 30;  // Increased movement speed
+    const moveSpeed = 30;
     const jumpSpeed = 10;
-
     const keys = { forward: false, backward: false, left: false, right: false, space: false };
 
     // Keyboard event listeners
@@ -98,8 +97,7 @@
         case 'ArrowRight':
         case 'KeyD': keys.right = true; break;
         case 'Space':
-          if (canJump) velocity.y = jumpSpeed;
-          canJump = false;
+          velocity.y = jumpSpeed; // Jump when space is pressed
           break;
       }
     });
@@ -117,17 +115,12 @@
       }
     });
 
-    // Ore cubes with ore texture
-    let ores = [];
-    const oreTexture = new THREE.TextureLoader().load('ore.png');  // Path to ore texture file
+    // Ore texture loading
+    const oreTexture = new THREE.TextureLoader().load('ore.png', function(texture) {
+      console.log('Ore texture loaded');
+    });
+    oreTexture.minFilter = THREE.LinearFilter;
     const oreMaterial = new THREE.MeshBasicMaterial({ map: oreTexture });
-
-    class Ore {
-      constructor(mesh, type) {
-        this.mesh = mesh;
-        this.type = type;
-      }
-    }
 
     // Function to spawn ores
     function spawnOre() {
@@ -137,15 +130,9 @@
       const x = playerPos.x + Math.cos(angle) * dist;
       const z = playerPos.z + Math.sin(angle) * dist;
       if (Math.abs(x - 20) > 5 || Math.abs(z - 20) > 5) {
-        const rand = Math.random();
-        let oreType;
-        if (rand < 0.5) oreType = { name: 'Iron', value: 5 };
-        else if (rand < 0.8) oreType = { name: 'Gold', value: 10 };
-        else oreType = { name: 'Diamond', value: 20 };
         const ore = new THREE.Mesh(new THREE.BoxGeometry(1, 1, 1), oreMaterial);
         ore.position.set(x, 0.5, z);
         scene.add(ore);
-        ores.push(new Ore(ore, oreType));
       } else {
         spawnOre();
       }
@@ -202,4 +189,26 @@
       oreInventory = { iron: 0, gold: 0, diamond: 0 };
       alert(`You sold your ores for ${total} points!`);
       updateMenu();
-      info.textContent =
+      info.textContent = `Score: ${score} | Ore: Iron ${oreInventory.iron}, Gold ${oreInventory.gold}, Diamond ${oreInventory.diamond}`;
+    });
+
+    // Main game loop
+    function animate() {
+      if (!isGamePaused) {
+        controls.update();
+        renderer.render(scene, camera);
+      }
+      requestAnimationFrame(animate);
+    }
+
+    animate();
+
+    // Handle window resize
+    window.addEventListener('resize', () => {
+      camera.aspect = window.innerWidth / window.innerHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(window.innerWidth, window.innerHeight);
+    });
+  </script>
+</body>
+</html>
