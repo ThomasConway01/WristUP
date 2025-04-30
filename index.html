@@ -48,11 +48,33 @@
     renderer.setSize(window.innerWidth, window.innerHeight);
     document.body.appendChild(renderer.domElement);
 
-    // Player controls
+    // Lighting
+    const light = new THREE.AmbientLight(0xffffff, 0.5);
+    scene.add(light);
+    const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
+    directionalLight.position.set(0, 10, 0).normalize();
+    scene.add(directionalLight);
+
+    // Ground setup
+    const groundGeometry = new THREE.PlaneGeometry(1000, 1000);
+    const groundMaterial = new THREE.MeshPhongMaterial({ color: 0x228B22 });
+    const ground = new THREE.Mesh(groundGeometry, groundMaterial);
+    ground.rotation.x = -Math.PI / 2;
+    scene.add(ground);
+
+    // Camera setup
+    camera.position.set(0, 1.6, 0);  // Start at correct height above ground
+
+    // Controls setup
     const controls = new THREE.PointerLockControls(camera, document.body);
-    camera.position.y = 1.6; // Player height
-    document.addEventListener('click', () => controls.lock(), false);
     scene.add(controls.getObject());
+    
+    // To activate pointer lock
+    const lockPointer = () => {
+      document.body.requestPointerLock();
+    };
+
+    document.addEventListener('click', lockPointer, false);  // Trigger on first click
 
     // Player movement variables
     const velocity = new THREE.Vector3();
@@ -91,20 +113,6 @@
       }
     });
 
-    // Lighting
-    const light = new THREE.AmbientLight(0xffffff, 0.5);
-    scene.add(light);
-    const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
-    directionalLight.position.set(0, 10, 0).normalize();
-    scene.add(directionalLight);
-
-    // Ground setup
-    const groundGeometry = new THREE.PlaneGeometry(1000, 1000);
-    const groundMaterial = new THREE.MeshPhongMaterial({ color: 0x228B22 });
-    const ground = new THREE.Mesh(groundGeometry, groundMaterial);
-    ground.rotation.x = -Math.PI / 2;
-    scene.add(ground);
-
     // Ore cubes (fallback texture)
     let ores = [];
     const oreGeometry = new THREE.BoxGeometry(1, 1, 1);
@@ -141,91 +149,32 @@
 
     for (let i = 0; i < 8; i++) spawnOre();
 
-    // Game state
-    let score = 10;
-    let oreInventory = { iron: 0, gold: 0, diamond: 0 };
-    let isGamePaused = false;
-    let isEmmaMode = false;
-    const info = document.getElementById('info');
-    const sellMenu = document.getElementById('sellMenu');
-    const shopButton = document.getElementById('shopButton');
-    const oreInventoryList = document.getElementById('oreInventory');
-    const oreValuesList = document.getElementById('oreValues');
-    const priceMessage = document.getElementById('priceMessage');
-    const sellButton = document.getElementById('sellButton');
-    const closeButton = document.getElementById('closeButton');
-    const emmaModeButton = document.getElementById('emmaModeButton');
-
-    function updateMenu() {
-      oreInventoryList.innerHTML = `
-        <li>Iron: ${oreInventory.iron}</li>
-        <li>Gold: ${oreInventory.gold}</li>
-        <li>Diamond: ${oreInventory.diamond}</li>
-      `;
-      oreValuesList.innerHTML = `
-        <li>Iron: 5 points each</li>
-        <li>Gold: 10 points each</li>
-        <li>Diamond: 20 points each</li>
-      `;
-      priceMessage.textContent = '';
-      emmaModeButton.textContent = isEmmaMode ? "Deactivate Emma Mode" : "Activate Emma Mode";
-    }
-
-    function toggleShop() {
-      isGamePaused = !isGamePaused;
-      sellMenu.style.display = isGamePaused ? 'block' : 'none';
-      shopButton.textContent = isGamePaused ? 'Resume Game' : 'Open Shop';
-      if (isGamePaused) {
-        updateMenu();
-      }
-    }
-
-    shopButton.addEventListener('click', toggleShop);
-    closeButton.addEventListener('click', toggleShop);
-
-    sellButton.addEventListener('click', () => {
-      const total = oreInventory.iron * 5 + oreInventory.gold * 10 + oreInventory.diamond * 20;
-      score += total;
-      oreInventory = { iron: 0, gold: 0, diamond: 0 };
-      alert(`You sold your ores for ${total} points!`);
-      updateMenu();
-      info.textContent = `Score: ${score} | Ore: Iron ${oreInventory.iron}, Gold ${oreInventory.gold}, Diamond ${oreInventory.diamond}`;
-    });
-
-    emmaModeButton.addEventListener('click', () => {
-      isEmmaMode = !isEmmaMode;
-      alert(isEmmaMode ? "Emma Mode Activated: All questions will now be times-tables!" : "Emma Mode Deactivated.");
-      updateMenu();
-    });
-
     // Main game loop
     const clock = new THREE.Clock();
     function animate() {
-      if (!isGamePaused) {
-        const delta = clock.getDelta();
-        velocity.x -= velocity.x * 10.0 * delta;
-        velocity.z -= velocity.z * 10.0 * delta;
-        velocity.y -= 9.8 * delta; // Gravity
+      const delta = clock.getDelta();
+      velocity.x -= velocity.x * 10.0 * delta;
+      velocity.z -= velocity.z * 10.0 * delta;
+      velocity.y -= 9.8 * delta; // Gravity
 
-        direction.z = Number(keys.forward) - Number(keys.backward);
-        direction.x = Number(keys.right) - Number(keys.left);
-        direction.normalize();
+      direction.z = Number(keys.forward) - Number(keys.backward);
+      direction.x = Number(keys.right) - Number(keys.left);
+      direction.normalize();
 
-        if (keys.forward || keys.backward) velocity.z -= direction.z * 10 * delta;
-        if (keys.left || keys.right) velocity.x -= direction.x * 10 * delta;
+      if (keys.forward || keys.backward) velocity.z -= direction.z * 10 * delta;
+      if (keys.left || keys.right) velocity.x -= direction.x * 10 * delta;
 
-        controls.moveRight(-velocity.x * delta);
-        controls.moveForward(-velocity.z * delta);
-        controls.getObject().position.y += velocity.y * delta;
+      controls.moveRight(-velocity.x * delta);
+      controls.moveForward(-velocity.z * delta);
+      controls.getObject().position.y += velocity.y * delta;
 
-        if (controls.getObject().position.y < 1.6) {
-          velocity.y = 0;
-          controls.getObject().position.y = 1.6;
-          canJump = true;
-        }
-
-        renderer.render(scene, camera);
+      if (controls.getObject().position.y < 1.6) {
+        velocity.y = 0;
+        controls.getObject().position.y = 1.6;
+        canJump = true;
       }
+
+      renderer.render(scene, camera);
       requestAnimationFrame(animate);
     }
 
