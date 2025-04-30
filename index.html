@@ -55,12 +55,13 @@
     directionalLight.position.set(0, 10, 0).normalize();
     scene.add(directionalLight);
 
-    // Ground setup
-    const groundGeometry = new THREE.PlaneGeometry(1000, 1000);
-    const groundMaterial = new THREE.MeshPhongMaterial({ color: 0x228B22 });
-    const ground = new THREE.Mesh(groundGeometry, groundMaterial);
-    ground.rotation.x = -Math.PI / 2;
-    scene.add(ground);
+    // Ground setup with floor texture
+    const floorTexture = new THREE.TextureLoader().load('floor.png');  // Path to floor texture file
+    const floorMaterial = new THREE.MeshBasicMaterial({ map: floorTexture, side: THREE.DoubleSide });
+    const floorGeometry = new THREE.PlaneGeometry(1000, 1000);
+    const floor = new THREE.Mesh(floorGeometry, floorMaterial);
+    floor.rotation.x = -Math.PI / 2;
+    scene.add(floor);
 
     // Camera setup
     camera.position.set(0, 1.6, 0);  // Start at correct height above ground
@@ -80,7 +81,7 @@
     let velocity = new THREE.Vector3();
     let direction = new THREE.Vector3();
     let canJump = false;
-    const moveSpeed = 20;  // Increased movement speed
+    const moveSpeed = 30;  // Increased movement speed
     const jumpSpeed = 10;
 
     const keys = { forward: false, backward: false, left: false, right: false, space: false };
@@ -116,7 +117,7 @@
       }
     });
 
-    // Ore cubes
+    // Ore cubes with ore texture
     let ores = [];
     const oreTexture = new THREE.TextureLoader().load('ore.png');  // Path to ore texture file
     const oreMaterial = new THREE.MeshBasicMaterial({ map: oreTexture });
@@ -201,35 +202,4 @@
       oreInventory = { iron: 0, gold: 0, diamond: 0 };
       alert(`You sold your ores for ${total} points!`);
       updateMenu();
-      info.textContent = `Score: ${score} | Ore: Iron ${oreInventory.iron}, Gold ${oreInventory.gold}, Diamond ${oreInventory.diamond}`;
-    });
-
-    emmaModeButton.addEventListener('click', () => {
-      isEmmaMode = !isEmmaMode;
-      alert(isEmmaMode ? "Emma Mode Activated: All questions will now be times-tables!" : "Emma Mode Deactivated.");
-      updateMenu();
-    });
-
-    // Main game loop
-    function animate() {
-      if (!isGamePaused) {
-        const delta = clock.getDelta();
-        controls.update(delta);
-        updateChunks();
-        renderer.render(scene, camera);
-      }
-      requestAnimationFrame(animate);
-    }
-
-    const clock = new THREE.Clock();
-    animate();
-
-    // Handle window resize
-    window.addEventListener('resize', () => {
-      camera.aspect = window.innerWidth / window.innerHeight;
-      camera.updateProjectionMatrix();
-      renderer.setSize(window.innerWidth, window.innerHeight);
-    });
-  </script>
-</body>
-</html>
+      info.textContent =
