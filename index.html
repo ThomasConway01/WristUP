@@ -48,25 +48,19 @@
     renderer.setSize(window.innerWidth, window.innerHeight);
     document.body.appendChild(renderer.domElement);
 
-    // Controls
+    // Player controls
     const controls = new THREE.PointerLockControls(camera, document.body);
     camera.position.y = 1.6; // Player height
-    document.addEventListener('click', () => controls.lock());
+    document.addEventListener('click', () => controls.lock(), false);
     scene.add(controls.getObject());
 
-    // Player movement
+    // Player movement variables
     const velocity = new THREE.Vector3();
     const direction = new THREE.Vector3();
     let canJump = false;
+    const keys = { forward: false, backward: false, left: false, right: false, space: false };
 
-    const keys = {
-      forward: false,
-      backward: false,
-      left: false,
-      right: false,
-      space: false,
-    };
-
+    // Keyboard event listeners
     document.addEventListener('keydown', (event) => {
       switch (event.code) {
         case 'ArrowUp':
@@ -104,18 +98,17 @@
     directionalLight.position.set(0, 10, 0).normalize();
     scene.add(directionalLight);
 
-    // Ground
+    // Ground setup
     const groundGeometry = new THREE.PlaneGeometry(1000, 1000);
     const groundMaterial = new THREE.MeshPhongMaterial({ color: 0x228B22 });
     const ground = new THREE.Mesh(groundGeometry, groundMaterial);
     ground.rotation.x = -Math.PI / 2;
     scene.add(ground);
 
-    // Ore cubes
+    // Ore cubes (fallback texture)
     let ores = [];
     const oreGeometry = new THREE.BoxGeometry(1, 1, 1);
-    const oreTexture = new THREE.TextureLoader().load('ore.png');
-    const oreMaterial = new THREE.MeshBasicMaterial({ map: oreTexture });
+    const oreMaterial = new THREE.MeshBasicMaterial({ color: 0xFFD700 }); // Gold color fallback
 
     class Ore {
       constructor(mesh, type) {
@@ -124,6 +117,7 @@
       }
     }
 
+    // Function to spawn ores
     function spawnOre() {
       const playerPos = camera.position;
       const dist = 15 + Math.random() * 25;
@@ -166,84 +160,4 @@
       oreInventoryList.innerHTML = `
         <li>Iron: ${oreInventory.iron}</li>
         <li>Gold: ${oreInventory.gold}</li>
-        <li>Diamond: ${oreInventory.diamond}</li>
-      `;
-      oreValuesList.innerHTML = `
-        <li>Iron: 5 points each</li>
-        <li>Gold: 10 points each</li>
-        <li>Diamond: 20 points each</li>
-      `;
-      priceMessage.textContent = '';
-      emmaModeButton.textContent = isEmmaMode ? "Deactivate Emma Mode" : "Activate Emma Mode";
-    }
-
-    function toggleShop() {
-      isGamePaused = !isGamePaused;
-      sellMenu.style.display = isGamePaused ? 'block' : 'none';
-      controls.enabled = !isGamePaused;
-      shopButton.textContent = isGamePaused ? 'Resume Game' : 'Open Shop';
-      if (isGamePaused) {
-        updateMenu();
-      }
-    }
-
-    shopButton.addEventListener('click', toggleShop);
-    closeButton.addEventListener('click', toggleShop);
-
-    sellButton.addEventListener('click', () => {
-      const total = oreInventory.iron * 5 + oreInventory.gold * 10 + oreInventory.diamond * 20;
-      score += total;
-      oreInventory = { iron: 0, gold: 0, diamond: 0 };
-      alert(`You sold your ores for ${total} points!`);
-      updateMenu();
-      info.textContent = `Score: ${score} | Ore: Iron ${oreInventory.iron}, Gold ${oreInventory.gold}, Diamond ${oreInventory.diamond}`;
-    });
-
-    emmaModeButton.addEventListener('click', () => {
-      isEmmaMode = !isEmmaMode;
-      alert(isEmmaMode ? "Emma Mode Activated: All questions will now be times-tables!" : "Emma Mode Deactivated.");
-      updateMenu();
-    });
-
-    // Main game loop
-    const clock = new THREE.Clock();
-    function animate() {
-      const delta = clock.getDelta();
-      velocity.x -= velocity.x * 10.0 * delta;
-      velocity.z -= velocity.z * 10.0 * delta;
-      velocity.y -= 9.8 * delta; // Gravity
-
-      direction.z = Number(keys.forward) - Number(keys.backward);
-      direction.x = Number(keys.right) - Number(keys.left);
-      direction.normalize();
-
-      if (keys.forward || keys.backward) velocity.z -= direction.z * 10 * delta;
-      if (keys.left || keys.right) velocity.x -= direction.x * 10 * delta;
-
-      controls.moveRight(-velocity.x * delta);
-      controls.moveForward(-velocity.z * delta);
-      controls.getObject().position.y += velocity.y * delta;
-
-      if (controls.getObject().position.y < 1.6) {
-        velocity.y = 0;
-        controls.getObject().position.y = 1.6;
-        canJump = true;
-      }
-
-      if (!isGamePaused) {
-        updateChunks();
-        renderer.render(scene, camera);
-      }
-      requestAnimationFrame(animate);
-    }
-    animate();
-
-    // Handle window resize
-    window.addEventListener('resize', () => {
-      camera.aspect = window.innerWidth / window.innerHeight;
-      camera.updateProjectionMatrix();
-      renderer.setSize(window.innerWidth, window.innerHeight);
-    });
-  </script>
-</body>
-</html>
+        <li>Diamond: ${oreInventory.diamond}</li
