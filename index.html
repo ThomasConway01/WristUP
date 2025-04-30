@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>KS2 Maths Minecraft 3D Game</title>
+  <title>KS2 MATHS CUBE GAME</title>
   <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
   <style>
     body { margin: 0; overflow: hidden; }
@@ -68,7 +68,7 @@
     // Controls setup
     const controls = new THREE.PointerLockControls(camera, document.body);
     scene.add(controls.getObject());
-    
+
     // To activate pointer lock
     const lockPointer = () => {
       document.body.requestPointerLock();
@@ -76,10 +76,13 @@
 
     document.addEventListener('click', lockPointer, false);  // Trigger on first click
 
-    // Player movement variables
-    const velocity = new THREE.Vector3();
-    const direction = new THREE.Vector3();
+    // Movement speed and controls
+    let velocity = new THREE.Vector3();
+    let direction = new THREE.Vector3();
     let canJump = false;
+    const moveSpeed = 10;  // Normalized movement speed
+    const jumpSpeed = 5;
+
     const keys = { forward: false, backward: false, left: false, right: false, space: false };
 
     // Keyboard event listeners
@@ -94,7 +97,7 @@
         case 'ArrowRight':
         case 'KeyD': keys.right = true; break;
         case 'Space':
-          if (canJump) velocity.y += 5;
+          if (canJump) velocity.y = jumpSpeed;
           canJump = false;
           break;
       }
@@ -113,10 +116,10 @@
       }
     });
 
-    // Ore cubes (fallback texture)
+    // Ore cubes
     let ores = [];
-    const oreGeometry = new THREE.BoxGeometry(1, 1, 1);
-    const oreMaterial = new THREE.MeshBasicMaterial({ color: 0xFFD700 }); // Gold color fallback
+    const oreTexture = new THREE.TextureLoader().load('ore.png');  // Correct local path to ore.png on GitHub Pages
+    const oreMaterial = new THREE.MeshBasicMaterial({ map: oreTexture });
 
     class Ore {
       constructor(mesh, type) {
@@ -138,7 +141,7 @@
         if (rand < 0.5) oreType = { name: 'Iron', value: 5 };
         else if (rand < 0.8) oreType = { name: 'Gold', value: 10 };
         else oreType = { name: 'Diamond', value: 20 };
-        const ore = new THREE.Mesh(oreGeometry, oreMaterial);
+        const ore = new THREE.Mesh(new THREE.BoxGeometry(1, 1, 1), oreMaterial);
         ore.position.set(x, 0.5, z);
         scene.add(ore);
         ores.push(new Ore(ore, oreType));
@@ -149,35 +152,76 @@
 
     for (let i = 0; i < 8; i++) spawnOre();
 
-    // Main game loop
-    const clock = new THREE.Clock();
-    function animate() {
-      const delta = clock.getDelta();
-      velocity.x -= velocity.x * 10.0 * delta;
-      velocity.z -= velocity.z * 10.0 * delta;
-      velocity.y -= 9.8 * delta; // Gravity
+    // Game state
+    let score = 10;
+    let oreInventory = { iron: 0, gold: 0, diamond: 0 };
+    let isGamePaused = false;
+    let isEmmaMode = false;
+    const info = document.getElementById('info');
+    const sellMenu = document.getElementById('sellMenu');
+    const shopButton = document.getElementById('shopButton');
+    const oreInventoryList = document.getElementById('oreInventory');
+    const oreValuesList = document.getElementById('oreValues');
+    const priceMessage = document.getElementById('priceMessage');
+    const sellButton = document.getElementById('sellButton');
+    const closeButton = document.getElementById('closeButton');
+    const emmaModeButton = document.getElementById('emmaModeButton');
 
-      direction.z = Number(keys.forward) - Number(keys.backward);
-      direction.x = Number(keys.right) - Number(keys.left);
-      direction.normalize();
+    function updateMenu() {
+      oreInventoryList.innerHTML = `
+        <li>Iron: ${oreInventory.iron}</li>
+        <li>Gold: ${oreInventory.gold}</li>
+        <li>Diamond: ${oreInventory.diamond}</li>
+      `;
+      oreValuesList.innerHTML = `
+        <li>Iron: 5 points each</li>
+        <li>Gold: 10 points each</li>
+        <li>Diamond: 20 points each</li>
+      `;
+      priceMessage.textContent = '';
+      emmaModeButton.textContent = isEmmaMode ? "Deactivate Emma Mode" : "Activate Emma Mode";
+    }
 
-      if (keys.forward || keys.backward) velocity.z -= direction.z * 10 * delta;
-      if (keys.left || keys.right) velocity.x -= direction.x * 10 * delta;
-
-      controls.moveRight(-velocity.x * delta);
-      controls.moveForward(-velocity.z * delta);
-      controls.getObject().position.y += velocity.y * delta;
-
-      if (controls.getObject().position.y < 1.6) {
-        velocity.y = 0;
-        controls.getObject().position.y = 1.6;
-        canJump = true;
+    function toggleShop() {
+      isGamePaused = !isGamePaused;
+      sellMenu.style.display = isGamePaused ? 'block' : 'none';
+      controls.enabled = !isGamePaused;
+      shopButton.textContent = isGamePaused ? 'Resume Game' : 'Open Shop';
+      if (isGamePaused) {
+        updateMenu();
       }
+    }
 
-      renderer.render(scene, camera);
+    shopButton.addEventListener('click', toggleShop);
+    closeButton.addEventListener('click', toggleShop);
+
+    sellButton.addEventListener('click', () => {
+      const total = oreInventory.iron * 5 + oreInventory.gold * 10 + oreInventory.diamond * 20;
+      score += total;
+      oreInventory = { iron: 0, gold: 0, diamond: 0 };
+      alert(`You sold your ores for ${total} points!`);
+      updateMenu();
+      info.textContent = `Score: ${score} | Ore: Iron ${oreInventory.iron}, Gold ${oreInventory.gold}, Diamond ${oreInventory.diamond}`;
+    });
+
+    emmaModeButton.addEventListener('click', () => {
+      isEmmaMode = !isEmmaMode;
+      alert(isEmmaMode ? "Emma Mode Activated: All questions will now be times-tables!" : "Emma Mode Deactivated.");
+      updateMenu();
+    });
+
+    // Main game loop
+    function animate() {
+      if (!isGamePaused) {
+        const delta = clock.getDelta();
+        controls.update(delta);
+        updateChunks();
+        renderer.render(scene, camera);
+      }
       requestAnimationFrame(animate);
     }
 
+    const clock = new THREE.Clock();
     animate();
 
     // Handle window resize
