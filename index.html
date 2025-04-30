@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>KS2 Maths Minecraft 3D Game</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <style>
+    body { margin: 0; overflow: hidden; }
+    canvas { display: block; }
+  </style>
+</head>
+<body class="bg-gray-900">
+  <div id="info" class="absolute top-4 left-4 text-white font-sans text-lg bg-black/50 px-4 py-2 rounded-lg">
+    Score: 10 | Ore: Iron 0, Gold 0, Diamond 0
+  </div>
+  <button id="shopButton" class="absolute top-4 right-4 bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded-lg transition duration-200">
+    Open Shop
+  </button>
+  <div id="sellMenu" class="hidden fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-gray-800/95 p-8 rounded-xl border-2 border-green-500 max-w-md w-full">
+    <button id="closeButton" class="absolute top-2 right-2 bg-red-500 hover:bg-red-600 text-white rounded-full w-8 h-8 flex items-center justify-center transition duration-200">X</button>
+    <h2 class="text-2xl font-bold text-green-400 mb-4 text-center">Shop</h2>
+    <div class="text-white mb-4">
+      <p class="font-semibold">Ore Inventory:</p>
+      <ul id="oreInventory" class="list-disc list-inside"></ul>
+    </div>
+    <div class="text-white mb-4">
+      <p class="font-semibold">Ore Values:</p>
+      <ul id="oreValues" class="list-disc list-inside"></ul>
+    </div>
+    <p id="priceMessage" class="text-white text-center mb-4"></p>
+    <div class="flex justify-center gap-4">
+      <button id="sellButton" class="bg-white hover:bg-gray-200 text-black font-bold py-2 px-6 rounded-lg transition duration-200">
+        Sell All Ore
+      </button>
+      <button id="emmaModeButton" class="bg-yellow-400 hover:bg-yellow-500 text-black font-bold py-2 px-6 rounded-lg transition duration-200">
+        Activate Emma Mode
+      </button>
+    </div>
+  </div>
+
+  <script src="https://unpkg.com/three@0.134.0/build/three.min.js"></script>
+  <script src="https://unpkg.com/three@0.134.0/examples/js/controls/PointerLockControls.js"></script>
+  <script>
+    // Scene setup
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+    const renderer = new THREE.WebGLRenderer();
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    document.body.appendChild(renderer.domElement);
+
+    // Controls
+    const controls = new THREE.PointerLockControls(camera, document.body);
+    camera.position.y = 1.6; // Player height
+    document.addEventListener('click', () => controls.lock());
+    scene.add(controls.getObject());
+
+    // Player movement
+    const velocity = new THREE.Vector3();
+    const direction = new THREE.Vector3();
+    let canJump = false;
+
+    const keys = {
+      forward: false,
+      backward: false,
+      left: false,
+      right: false,
+      space: false,
+    };
+
+    document.addEventListener('keydown', (event) => {
+      switch (event.code) {
+        case 'ArrowUp':
+        case 'KeyW': keys.forward = true; break;
+        case 'ArrowLeft':
+        case 'KeyA': keys.left = true; break;
+        case 'ArrowDown':
+        case 'KeyS': keys.backward = true; break;
+        case 'ArrowRight':
+        case 'KeyD': keys.right = true; break;
+        case 'Space':
+          if (canJump) velocity.y += 5;
+          canJump = false;
+          break;
+      }
+    });
+
+    document.addEventListener('keyup', (event) => {
+      switch (event.code) {
+        case 'ArrowUp':
+        case 'KeyW': keys.forward = false; break;
+        case 'ArrowLeft':
+        case 'KeyA': keys.left = false; break;
+        case 'ArrowDown':
+        case 'KeyS': keys.backward = false; break;
+        case 'ArrowRight':
+        case 'KeyD': keys.right = false; break;
+      }
+    });
+
+    // Lighting
+    const light = new THREE.AmbientLight(0xffffff, 0.5);
+    scene.add(light);
+    const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
+    directionalLight.position.set(0, 10, 0).normalize();
+    scene.add(directionalLight);
+
+    // Ground
+    const groundGeometry = new THREE.PlaneGeometry(1000, 1000);
+    const groundMaterial = new THREE.MeshPhongMaterial({ color: 0x228B22 });
+    const ground = new THREE.Mesh(groundGeometry, groundMaterial);
+    ground.rotation.x = -Math.PI / 2;
+    scene.add(ground);
+
+    // Ore cubes
+    let ores = [];
+    const oreGeometry = new THREE.BoxGeometry(1, 1, 1);
+    const oreTexture = new THREE.TextureLoader().load('ore.png');
+    const oreMaterial = new THREE.MeshBasicMaterial({ map: oreTexture });
+
+    class Ore {
+      constructor(mesh, type) {
+        this.mesh = mesh;
+        this.type = type;
+      }
+    }
+
+    function spawnOre() {
+      const playerPos = camera.position;
+      const dist = 15 + Math.random() * 25;
+      const angle = Math.random() * Math.PI * 2;
+      const x = playerPos.x + Math.cos(angle) * dist;
+      const z = playerPos.z + Math.sin(angle) * dist;
+      if (Math.abs(x - 20) > 5 || Math.abs(z - 20) > 5) {
+        const rand = Math.random();
+        let oreType;
+        if (rand < 0.5) oreType = { name: 'Iron', value: 5 };
+        else if (rand < 0.8) oreType = { name: 'Gold', value: 10 };
+        else oreType = { name: 'Diamond', value: 20 };
+        const ore = new THREE.Mesh(oreGeometry, oreMaterial);
+        ore.position.set(x, 0.5, z);
+        scene.add(ore);
+        ores.push(new Ore(ore, oreType));
+      } else {
+        spawnOre();
+      }
+    }
+
+    for (let i = 0; i < 8; i++) spawnOre();
+
+    // Game state
+    let score = 10;
+    let oreInventory = { iron: 0, gold: 0, diamond: 0 };
+    let isGamePaused = false;
+    let isEmmaMode = false;
+    const info = document.getElementById('info');
+    const sellMenu = document.getElementById('sellMenu');
+    const shopButton = document.getElementById('shopButton');
+    const oreInventoryList = document.getElementById('oreInventory');
+    const oreValuesList = document.getElementById('oreValues');
+    const priceMessage = document.getElementById('priceMessage');
+    const sellButton = document.getElementById('sellButton');
+    const closeButton = document.getElementById('closeButton');
+    const emmaModeButton = document.getElementById('emmaModeButton');
+
+    function updateMenu() {
+      oreInventoryList.innerHTML = `
+        <li>Iron: ${oreInventory.iron}</li>
+        <li>Gold: ${oreInventory.gold}</li>
+        <li>Diamond: ${oreInventory.diamond}</li>
+      `;
+      oreValuesList.innerHTML = `
+        <li>Iron: 5 points each</li>
+        <li>Gold: 10 points each</li>
+        <li>Diamond: 20 points each</li>
+      `;
+      priceMessage.textContent = '';
+      emmaModeButton.textContent = isEmmaMode ? "Deactivate Emma Mode" : "Activate Emma Mode";
+    }
+
+    function toggleShop() {
+      isGamePaused = !isGamePaused;
+      sellMenu.style.display = isGamePaused ? 'block' : 'none';
+      controls.enabled = !isGamePaused;
+      shopButton.textContent = isGamePaused ? 'Resume Game' : 'Open Shop';
+      if (isGamePaused) {
+        updateMenu();
+      }
+    }
+
+    shopButton.addEventListener('click', toggleShop);
+    closeButton.addEventListener('click', toggleShop);
+
+    sellButton.addEventListener('click', () => {
+      const total = oreInventory.iron * 5 + oreInventory.gold * 10 + oreInventory.diamond * 20;
+      score += total;
+      oreInventory = { iron: 0, gold: 0, diamond: 0 };
+      alert(`You sold your ores for ${total} points!`);
+      updateMenu();
+      info.textContent = `Score: ${score} | Ore: Iron ${oreInventory.iron}, Gold ${oreInventory.gold}, Diamond ${oreInventory.diamond}`;
+    });
+
+    emmaModeButton.addEventListener('click', () => {
+      isEmmaMode = !isEmmaMode;
+      alert(isEmmaMode ? "Emma Mode Activated: All questions will now be times-tables!" : "Emma Mode Deactivated.");
+      updateMenu();
+    });
+
+    // Main game loop
+    const clock = new THREE.Clock();
+    function animate() {
+      const delta = clock.getDelta();
+      velocity.x -= velocity.x * 10.0 * delta;
+      velocity.z -= velocity.z * 10.0 * delta;
+      velocity.y -= 9.8 * delta; // Gravity
+
+      direction.z = Number(keys.forward) - Number(keys.backward);
+      direction.x = Number(keys.right) - Number(keys.left);
+      direction.normalize();
+
+      if (keys.forward || keys.backward) velocity.z -= direction.z * 10 * delta;
+      if (keys.left || keys.right) velocity.x -= direction.x * 10 * delta;
+
+      controls.moveRight(-velocity.x * delta);
+      controls.moveForward(-velocity.z * delta);
+      controls.getObject().position.y += velocity.y * delta;
+
+      if (controls.getObject().position.y < 1.6) {
+        velocity.y = 0;
+        controls.getObject().position.y = 1.6;
+        canJump = true;
+      }
+
+      if (!isGamePaused) {
+        updateChunks();
+        renderer.render(scene, camera);
+      }
+      requestAnimationFrame(animate);
+    }
+    animate();
+
+    // Handle window resize
+    window.addEventListener('resize', () => {
+      camera.aspect = window.innerWidth / window.innerHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(window.innerWidth, window.innerHeight);
+    });
+  </script>
+</body>
+</html>
