@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WristUp - Handmade Clay Bead Bracelets</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="announcement-bar">
+        <p>Free Shipping on all orders over £20</p>
+    </div>
+    
+    <header>
+        <div class="container">
+            <h1 class="logo">WristUp</h1>
+            <nav>
+                <ul>
+                    <li><a href="index.html" class="active">Home</a></li>
+                    <li><a href="main-shop.html">Main Shop</a></li>
+                    <li><a href="mystery-boxes.html">Mystery Boxes</a></li>
+                    <li><a href="seasonal.html">Seasonal</a></li>
+                    <li><a href="payment.html">Cart (<span id="cart-count">0</span>)</a></li>
+                </ul>
+            </nav>
+            <div class="header-icons">
+                <a href="payment.html" class="cart-icon"><i class="fas fa-shopping-bag"></i><span class="cart-count" id="cart-count-icon">0</span></a>
+                <button class="search-toggle"><i class="fas fa-search"></i></button>
+            </div>
+        </div>
+    </header>
+
+    <div class="search-overlay hidden">
+        <div class="container">
+            <form class="search-form">
+                <input type="text" placeholder="Search for bracelets...">
+                <button type="submit"><i class="fas fa-search"></i></button>
+            </form>
+            <button class="close-search"><i class="fas fa-times"></i></button>
+        </div>
+    </div>
+
+    <section class="hero">
+        <div class="hero-content">
+            <div class="hero-text">
+                <h2>Handcrafted Clay Bead Bracelets</h2>
+                <p>Express your style with our unique, colorful bracelets made with love</p>
+                <a href="main-shop.html" class="btn">Shop Now</a>
+            </div>
+        </div>
+    </section>
+
+    <section class="featured-categories">
+        <div class="container">
+            <h2 class="section-title">Shop Collections</h2>
+            <div class="category-grid">
+                <a href="main-shop.html" class="category-card">
+                    <div class="category-image">
+                        <img src="images/main-shop.png" alt="Main Shop Collection">
+                    </div>
+                    <div class="category-info">
+                        <h3>Main Shop</h3>
+                        <p>Our everyday collection of handmade bracelets</p>
+                        <span class="category-link">Shop Now <i class="fas fa-arrow-right"></i></span>
+                    </div>
+                </a>
+                <a href="mystery-boxes.html" class="category-card">
+                    <div class="category-image">
+                        <img src="images/mystery-boxes.png" alt="Mystery Boxes">
+                    </div>
+                    <div class="category-info">
+                        <h3>Mystery Boxes</h3>
+                        <p>Surprise yourself with our mystery bracelet boxes</p>
+                        <span class="category-link">Shop Now <i class="fas fa-arrow-right"></i></span>
+                    </div>
+                </a>
+                <a href="seasonal.html" class="category-card">
+                    <div class="category-image">
+                        <img src="images/summer-vibes.png" alt="Seasonal Collection">
+                    </div>
+                    <div class="category-info">
+                        <h3>Seasonal</h3>
+                        <p>Limited edition bracelets for every season</p>
+                        <span class="category-link">Shop Now <i class="fas fa-arrow-right"></i></span>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <section class="featured-products">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">Featured Bracelets</h2>
+                <a href="main-shop.html" class="view-all">View All <i class="fas fa-arrow-right"></i></a>
+            </div>
+            <div class="product-slider" id="featured-products">
+                <!-- Products will be loaded dynamically -->
+            </div>
+        </div>
+    </section>
+
+    <section class="about-section">
+        <div class="container">
+            <div class="about-content">
+                <h2>Handcrafted with Love</h2>
+                <p>Each WristUp bracelet is carefully crafted by hand, ensuring unique designs that express your personality. Our colorful clay beads are selected for quality and style, creating bracelets that stand out.</p>
+                <div class="features">
+                    <div class="feature">
+                        <div class="feature-icon">🎨</div>
+                        <h3>Handmade</h3>
+                        <p>Each bracelet is carefully crafted by hand</p>
+                    </div>
+                    <div class="feature">
+                        <div class="feature-icon">🌈</div>
+                        <h3>Colorful</h3>
+                        <p>Vibrant colors to match any outfit</p>
+                    </div>
+                    <div class="feature">
+                        <div class="feature-icon">💝</div>
+                        <h3>Custom</h3>
+                        <p>Custom orders available for special occasions</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3 class="logo">WristUp</h3>
+                    <p>Handmade clay bead bracelets for every style and occasion.</p>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-facebook"></i></a>
+                        <a href="#"><i class="fab fa-tiktok"></i></a>
+                    </div>
+                </div>
+                <div class="footer-section">
+                    <h3>Shop</h3>
+                    <ul>
+                        <li><a href="main-shop.html">Main Shop</a></li>
+                        <li><a href="mystery-boxes.html">Mystery Boxes</a></li>
+                        <li><a href="seasonal.html">Seasonal</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>Info</h3>
+                    <ul>
+                        <li><a href="#">About Us</a></li>
+                        <li><a href="#">Shipping & Returns</a></li>
+                        <li><a href="#">Contact Us</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>Newsletter</h3>
+                    <p>Subscribe to get special offers and updates</p>
+                    <form class="newsletter-form">
+                        <input type="email" placeholder="Your email">
+                        <button type="submit">Subscribe</button>
+                    </form>
+                </div>
+            </div>
+            <div class="copyright">
+                <p>&copy; 2025 WristUp. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>

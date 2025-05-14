@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shop - WristUp Clay Bead Bracelets</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1 class="logo">WristUp</h1>
+            <nav>
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="products.html" class="active">Shop</a></li>
+                    <li><a href="payment.html">Cart (<span id="cart-count">0</span>)</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <section class="page-header">
+        <div class="container">
+            <h2>Our Bracelets</h2>
+            <p>Browse our collection of handmade clay bead bracelets</p>
+        </div>
+    </section>
+
+    <section class="admin-controls">
+        <div class="container">
+            <button id="edit-mode-toggle" class="btn btn-outline">Edit Prices</button>
+            <div id="edit-instructions" class="hidden">
+                <p>Click on any price to edit it. Click "Save Prices" when done.</p>
+                <button id="save-prices" class="btn">Save Prices</button>
+            </div>
+        </div>
+    </section>
+
+    <section class="category-section summer-section" id="summer-section">
+        <div class="container">
+            <h2 class="category-title">Summer Collection</h2>
+            <div class="product-grid" id="summer-products">
+                <!-- Summer products will be loaded from script.js -->
+            </div>
+        </div>
+    </section>
+
+    <section class="category-section mystery-section" id="mystery-section">
+        <div class="container">
+            <h2 class="category-title">Mystery Boxes</h2>
+            <div class="product-grid" id="mystery-products">
+                <!-- Mystery box products will be loaded from script.js -->
+            </div>
+        </div>
+    </section>
+
+    <section class="category-section regular-section" id="regular-section">
+        <div class="container">
+            <h2 class="category-title">Regular Shop</h2>
+            <div class="product-grid" id="regular-products">
+                <!-- Regular products will be loaded from script.js -->
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>WristUp</h3>
+                    <p>Handmade clay bead bracelets for every style and occasion.</p>
+                </div>
+                <div class="footer-section">
+                    <h3>Quick Links</h3>
+                    <ul>
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="products.html">Shop</a></li>
+                        <li><a href="payment.html">Cart</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>Contact</h3>
+                    <p>Email: hello@wristup.com</p>
+                    <p>Phone: (555) 123-4567</p>
+                </div>
+            </div>
+            <div class="copyright">
+                <p>&copy; 2025 WristUp. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>

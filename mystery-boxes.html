@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mystery Boxes - WristUp Clay Bead Bracelets</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="announcement-bar">
+        <p>Free Shipping on all orders over £20</p>
+    </div>
+    
+    <header>
+        <div class="container">
+            <h1 class="logo">WristUp</h1>
+            <nav>
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="main-shop.html">Main Shop</a></li>
+                    <li><a href="mystery-boxes.html" class="active">Mystery Boxes</a></li>
+                    <li><a href="seasonal.html">Seasonal</a></li>
+                    <li><a href="payment.html">Cart (<span id="cart-count">0</span>)</a></li>
+                </ul>
+            </nav>
+            <div class="header-icons">
+                <a href="payment.html" class="cart-icon"><i class="fas fa-shopping-bag"></i><span class="cart-count" id="cart-count-icon">0</span></a>
+                <button class="search-toggle"><i class="fas fa-search"></i></button>
+            </div>
+        </div>
+    </header>
+
+    <div class="search-overlay hidden">
+        <div class="container">
+            <form class="search-form">
+                <input type="text" placeholder="Search for bracelets...">
+                <button type="submit"><i class="fas fa-search"></i></button>
+            </form>
+            <button class="close-search"><i class="fas fa-times"></i></button>
+        </div>
+    </div>
+
+    <section class="page-header mystery-header">
+        <div class="container">
+            <h1>Mystery Boxes</h1>
+            <p>Surprise yourself with our mystery bracelet boxes</p>
+        </div>
+    </section>
+
+    <section class="mystery-intro">
+        <div class="container">
+            <div class="mystery-content">
+                <h2>What's in a Mystery Box?</h2>
+                <p>Each mystery box contains a surprise selection of our handmade clay bead bracelets. You'll receive unique designs that aren't available in our regular shop, making each box a special treasure.</p>
+                <div class="mystery-features">
+                    <div class="mystery-feature">
+                        <div class="feature-icon">🎁</div>
+                        <p>Exclusive designs</p>
+                    </div>
+                    <div class="mystery-feature">
+                        <div class="feature-icon">💫</div>
+                        <p>Value guaranteed</p>
+                    </div>
+                    <div class="mystery-feature">
+                        <div class="feature-icon">🎨</div>
+                        <p>Curated collections</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="products-section">
+        <div class="container">
+            <div class="product-grid" id="mystery-box-products">
+                <!-- Products will be loaded dynamically from mystery_boxes.txt -->
+                <div class="loading">
+                    <div class="spinner"></div>
+                    <p>Loading products...</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3 class="logo">WristUp</h3>
+                    <p>Handmade clay bead bracelets for every style and occasion.</p>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-facebook"></i></a>
+                        <a href="#"><i class="fab fa-tiktok"></i></a>
+                    </div>
+                </div>
+                <div class="footer-section">
+                    <h3>Shop</h3>
+                    <ul>
+                        <li><a href="main-shop.html">Main Shop</a></li>
+                        <li><a href="mystery-boxes.html">Mystery Boxes</a></li>
+                        <li><a href="seasonal.html">Seasonal</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>Info</h3>
+                    <ul>
+                        <li><a href="#">About Us</a></li>
+                        <li><a href="#">Shipping & Returns</a></li>
+                        <li><a href="#">Contact Us</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>Newsletter</h3>
+                    <p>Subscribe to get special offers and updates</p>
+                    <form class="newsletter-form">
+                        <input type="email" placeholder="Your email">
+                        <button type="submit">Subscribe</button>
+                    </form>
+                </div>
+            </div>
+            <div class="copyright">
+                <p>&copy; 2025 WristUp. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
