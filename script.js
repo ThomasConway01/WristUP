@@ -42,6 +42,38 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   })
 
+  // Product card click to open modal
+  document.addEventListener("click", (e) => {
+    const productCard = e.target.closest(".product-card")
+    if (productCard && !e.target.classList.contains("add-to-cart")) {
+      const productId = Number.parseInt(productCard.querySelector(".add-to-cart").getAttribute("data-id"))
+      showProductModal(productId)
+    }
+  })
+
+  // Modal controls
+  const productModal = document.getElementById("product-modal")
+  if (productModal) {
+    productModal.querySelector(".close-modal").addEventListener("click", () => {
+      productModal.classList.add("hidden")
+    })
+
+    productModal.querySelector(".prev-image").addEventListener("click", () => {
+      cycleProductImage(-1)
+    })
+
+    productModal.querySelector(".next-image").addEventListener("click", () => {
+      cycleProductImage(1)
+    })
+
+    // Close modal on escape key
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape" && !productModal.classList.contains("hidden")) {
+        productModal.classList.add("hidden")
+      }
+    })
+  }
+
   // Cart page specific code
   const cartList = document.getElementById("cart-list")
   if (cartList) {
@@ -91,6 +123,10 @@ document.addEventListener("DOMContentLoaded", () => {
     })
   }
 })
+
+// Current product image index for modal
+let currentImageIndex = 0
+let currentProductImages = []
 
 // Setup search functionality
 function setupSearch() {
@@ -143,25 +179,25 @@ function loadFeaturedProducts() {
       id: 1,
       name: "Starry Beach",
       price: 1.0,
-      image: "images/starry-beach.png",
+      images: ["images/starry-beach.png", "images/starry-beach-2.png", "images/starry-beach-3.png"],
     },
     {
       id: 101,
       name: "Mystery Box - Regular",
       price: 2.5,
-      image: "images/mystery-regular.png",
+      images: ["images/mystery-regular.png", "images/mystery-regular-2.png"],
     },
     {
       id: 201,
       name: "Summer Vibes",
       price: 2.0,
-      image: "images/summer-vibes-bracelet.png",
+      images: ["images/summer-vibes-bracelet.png", "images/summer-vibes-2.png"],
     },
     {
       id: 7,
       name: "Fruit n Toot - staff fav",
       price: 1.0,
-      image: "images/fruit-n-toot.png",
+      images: ["images/fruit-n-toot.png", "images/fruit-n-toot-2.png"],
     },
   ]
 
@@ -172,12 +208,12 @@ function loadFeaturedProducts() {
     productCard.className = "product-card"
     productCard.innerHTML = `
       <div class="product-image">
-        <img src="${product.image}" alt="${product.name}">
+        <img src="${product.images[0]}" alt="${product.name}">
       </div>
       <div class="product-info">
         <h3 class="product-name">${product.name}</h3>
         <p class="product-price">£${product.price.toFixed(2)}</p>
-        <button class="add-to-cart" data-id="${product.id}" data-name="${product.name}" data-price="${product.price}" data-image="${product.image}">Add to Cart</button>
+        <button class="add-to-cart" data-id="${product.id}" data-name="${product.name}" data-price="${product.price}" data-image="${product.images[0]}">Add to Cart</button>
       </div>
     `
     featuredContainer.appendChild(productCard)
@@ -193,28 +229,31 @@ function loadProducts(category, sortOption = "featured") {
   if (category === "main-shop") {
     containerId = "main-shop-products"
     products = [
-      { id: 1, name: "Starry Beach", price: 1.0, image: "images/starry-beach.png" },
-      { id: 2, name: "Summer Flowers", price: 1.5, image: "images/summer-flowers.png" },
-      { id: 3, name: "Neon Pearls", price: 1.0, image: "images/neon-pearls.png" },
-      { id: 4, name: "Smiley Pink", price: 1.0, image: "images/smiley-pink.png" },
-      { id: 5, name: "Midnight Stars Bundle", price: 1.5, image: "images/midnight-stars.png" },
-      { id: 6, name: "Custom", price: 1.5, image: "images/custom.png" },
-      { id: 7, name: "Fruit n Toot", price: 1.0, image: "images/fruit-n-toot.png" },
-      { id: 8, name: "Aloha", price: 1.0, image: "images/aloha.png" },
+      { id: 1, name: "Starry Beach", price: 1.0, images: ["images/starry-beach.png", "images/starry-beach-2.png", "images/starry-beach-3.png"] },
+      { id: 2, name: "Summer Flowers", price: 1.5, images: ["images/summer-flowers.png", "images/summer-flowers-2.png"] },
+      { id: 3, name: "Neon Pearls", price: 1.0, images: ["images/neon-pearls.png"] },
+      { id: 4, name: "Smiley Pink", price: 1.0, images: ["images/smiley-pink.png"] },
+      { id: 5, name: "Midnight Stars Bundle", price: 1.5, images: ["images/midnight-stars.png"] },
+      { id: 6, name: "Custom", price: 1.5, images: ["images/custom.png"] },
+      { id: 7, name: "Fruit n Toot", price: 1.0, images: ["images/fruit-n-toot.png", "images/fruit-n-toot-2.png"] },
+      { id: 8, name: "Aloha", price: 1.0, images: ["images/aloha.png"] },
+      { id: 9, name: "Example Bracelet", price: 1.25, images: ["images/example-bracelet.png", "images/example-bracelet-2.png", "images/example-bracelet-3.png"] },
     ]
   } else if (category === "mystery-boxes") {
     containerId = "mystery-box-products"
     products = [
-      { id: 101, name: "Mystery Box - Mini", price: 1.5, image: "images/mystery-mini.png" },
-      { id: 102, name: "Mystery Box - Regular", price: 2.5, image: "images/mystery-regular.png" },
-      { id: 103, name: "Mystery Box - Large", price: 3.99, image: "images/mystery-large.png" },
+      { id: 101, name: "Mystery Box - Mini", price: 1.5, images: ["images/mystery-mini.png", "images/mystery-mini-2.png"] },
+      { id: 102, name: "Mystery Box - Regular", price: 2.5, images: ["images/mystery-regular.png", "images/mystery-regular-2.png"] },
+      { id: 103, name: "Mystery Box - Large", price: 3.99, images: ["images/mystery-large.png", "images/mystery-large-2.png"] },
+      { id: 104, name: "Example Mystery Box", price: 2.0, images: ["images/example-mystery-box.png", "images/example-mystery-box-2.png", "images/example-mystery-box-3.png"] },
     ]
   } else if (category === "seasonal") {
     containerId = "seasonal-products"
     products = [
-      { id: 201, name: "Summer Vibes", price: 2.0, image: "images/summer-vibes-bracelet.png" },
-      { id: 202, name: "Pink Lemonade", price: 1.25, image: "images/pink-lemonade.png" },
-      { id: 203, name: "Summer Salt", price: 1.2, image: "images/summer-salt.png" },
+      { id: 201, name: "Summer Vibes", price: 2.0, images: ["images/summer-vibes-bracelet.png", "images/summer-vibes-2.png"] },
+      { id: 202, name: "Pink Lemonade", price: 1.25, images: ["images/pink-lemonade.png", "images/pink-lemonade-2.png"] },
+      { id: 203, name: "Summer Salt", price: 1.2, images: ["images/summer-salt.png", "images/summer-salt-2.png"] },
+      { id: 204, name: "Example Seasonal Bracelet", price: 1.5, images: ["images/example-seasonal-bracelet.png", "images/example-seasonal-bracelet-2.png", "images/example-seasonal-bracelet-3.png"] },
     ]
   }
 
@@ -225,7 +264,7 @@ function loadProducts(category, sortOption = "featured") {
   if (sortOption === "price-low") {
     products.sort((a, b) => a.price - b.price)
   } else if (sortOption === "price-high") {
-    products.sort((a, b) => b.price - a.price)
+    products.sort((a, b) => b.price - b.price)
   } else if (sortOption === "name-az") {
     products.sort((a, b) => a.name.localeCompare(b.name))
   } else if (sortOption === "name-za") {
@@ -240,16 +279,73 @@ function loadProducts(category, sortOption = "featured") {
     productCard.className = "product-card"
     productCard.innerHTML = `
       <div class="product-image">
-        <img src="${product.image}" alt="${product.name}">
+        <img src="${product.images[0]}" alt="${product.name}">
       </div>
       <div class="product-info">
         <h3 class="product-name">${product.name}</h3>
         <p class="product-price">£${product.price.toFixed(2)}</p>
-        <button class="add-to-cart" data-id="${product.id}" data-name="${product.name}" data-price="${product.price}" data-image="${product.image}">Add to Cart</button>
+        <button class="add-to-cart" data-id="${product.id}" data-name="${product.name}" data-price="${product.price}" data-image="${product.images[0]}">Add to Cart</button>
       </div>
     `
     container.appendChild(productCard)
   })
+}
+
+// Show product modal
+function showProductModal(productId) {
+  const allProducts = [
+    ...[
+      { id: 1, name: "Starry Beach", price: 1.0, images: ["images/starry-beach.png", "images/starry-beach-2.png", "images/starry-beach-3.png"] },
+      { id: 2, name: "Summer Flowers", price: 1.5, images: ["images/summer-flowers.png", "images/summer-flowers-2.png"] },
+      { id: 3, name: "Neon Pearls", price: 1.0, images: ["images/neon-pearls.png"] },
+      { id: 4, name: "Smiley Pink", price: 1.0, images: ["images/smiley-pink.png"] },
+      { id: 5, name: "Midnight Stars Bundle", price: 1.5, images: ["images/midnight-stars.png"] },
+      { id: 6, name: "Custom", price: 1.5, images: ["images/custom.png"] },
+      { id: 7, name: "Fruit n Toot", price: 1.0, images: ["images/fruit-n-toot.png", "images/fruit-n-toot-2.png"] },
+      { id: 8, name: "Aloha", price: 1.0, images: ["images/aloha.png"] },
+      { id: 9, name: "Example Bracelet", price: 1.25, images: ["images/example-bracelet.png", "images/example-bracelet-2.png", "images/example-bracelet-3.png"] },
+    ],
+    ...[
+      { id: 101, name: "Mystery Box - Mini", price: 1.5, images: ["images/mystery-mini.png", "images/mystery-mini-2.png"] },
+      { id: 102, name: "Mystery Box - Regular", price: 2.5, images: ["images/mystery-regular.png", "images/mystery-regular-2.png"] },
+      { id: 103, name: "Mystery Box - Large", price: 3.99, images: ["images/mystery-large.png", "images/mystery-large-2.png"] },
+      { id: 104, name: "Example Mystery Box", price: 2.0, images: ["images/example-mystery-box.png", "images/example-mystery-box-2.png", "images/example-mystery-box-3.png"] },
+    ],
+    ...[
+      { id: 201, name: "Summer Vibes", price: 2.0, images: ["images/summer-vibes-bracelet.png", "images/summer-vibes-2.png"] },
+      { id: 202, name: "Pink Lemonade", price: 1.25, images: ["images/pink-lemonade.png", "images/pink-lemonade-2.png"] },
+      { id: 203, name: "Summer Salt", price: 1.2, images: ["images/summer-salt.png", "images/summer-salt-2.png"] },
+      { id: 204, name: "Example Seasonal Bracelet", price: 1.5, images: ["images/example-seasonal-bracelet.png", "images/example-seasonal-bracelet-2.png", "images/example-seasonal-bracelet-3.png"] },
+    ],
+  ]
+
+  const product = allProducts.find((p) => p.id === productId)
+  if (!product) return
+
+  const modal = document.getElementById("product-modal")
+  const modalImage = document.getElementById("modal-image")
+  const modalName = document.getElementById("modal-name")
+  const modalPrice = document.getElementById("modal-price")
+  const modalAddToCart = document.getElementById("modal-add-to-cart")
+
+  currentProductImages = product.images
+  currentImageIndex = 0
+
+  modalImage.src = product.images[0]
+  modalName.textContent = product.name
+  modalPrice.textContent = `£${product.price.toFixed(2)}`
+  modalAddToCart.setAttribute("data-id", product.id)
+  modalAddToCart.setAttribute("data-name", product.name)
+  modalAddToCart.setAttribute("data-price", product.price)
+  modalAddToCart.setAttribute("data-image", product.images[0])
+
+  modal.classList.remove("hidden")
+}
+
+// Cycle through product images
+function cycleProductImage(direction) {
+  currentImageIndex = (currentImageIndex + direction + currentProductImages.length) % currentProductImages.length
+  document.getElementById("modal-image").src = currentProductImages[currentImageIndex]
 }
 
 // Add item to cart

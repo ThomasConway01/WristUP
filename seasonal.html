@@ -3,18 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Seasonal Collection - WristUp Clay Bead Bracelets</title>
+    <title>Seasonal Collection - WristUp</title>
     <link rel="stylesheet" href="styles.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
     <div class="announcement-bar">
-        <p>Free Shipping on all orders over £20</p>
+        Free Shipping on all orders over £20
     </div>
-    
+
     <header>
         <div class="container">
-            <h1 class="logo">WristUp</h1>
+            <a href="index.html" class="logo">WristUp</a>
             <nav>
                 <ul>
                     <li><a href="index.html">Home</a></li>
@@ -25,20 +24,20 @@
                 </ul>
             </nav>
             <div class="header-icons">
-                <a href="payment.html" class="cart-icon"><i class="fas fa-shopping-bag"></i><span class="cart-count" id="cart-count-icon">0</span></a>
-                <button class="search-toggle"><i class="fas fa-search"></i></button>
+                <button class="search-toggle">🔍</button>
+                <a href="payment.html" class="cart-icon">
+                    🛒 <span id="cart-count-icon">0</span>
+                </a>
             </div>
         </div>
     </header>
 
     <div class="search-overlay hidden">
-        <div class="container">
-            <form class="search-form">
-                <input type="text" placeholder="Search for bracelets...">
-                <button type="submit"><i class="fas fa-search"></i></button>
-            </form>
-            <button class="close-search"><i class="fas fa-times"></i></button>
-        </div>
+        <button class="close-search">✕</button>
+        <form class="search-form">
+            <input type="text" placeholder="Search products...">
+            <button type="submit">🔍</button>
+        </form>
     </div>
 
     <section class="page-header seasonal-header">
@@ -49,18 +48,15 @@
     </section>
 
     <section class="seasonal-banner">
-        <div class="container">
-            <div class="banner-content">
-                <h2>Summer Collection</h2>
-                <p>Bright colors and beach vibes for the perfect summer accessory</p>
-            </div>
+        <div class="banner-content">
+            <h2>Summer Collection</h2>
+            <p>Bright colors and beach vibes for the perfect summer accessory</p>
         </div>
     </section>
 
     <section class="products-section">
         <div class="container">
             <div class="product-grid" id="seasonal-products">
-                <!-- Products will be loaded dynamically from seasonal.txt -->
                 <div class="loading">
                     <div class="spinner"></div>
                     <p>Loading products...</p>
@@ -69,16 +65,33 @@
         </div>
     </section>
 
+    <!-- Product Modal -->
+    <div class="product-modal hidden" id="product-modal">
+        <div class="modal-content">
+            <button class="close-modal">✕</button>
+            <div class="modal-image-container">
+                <img id="modal-image" src="" alt="Product">
+                <button class="prev-image">←</button>
+                <button class="next-image">→</button>
+            </div>
+            <div class="modal-info">
+                <h2 id="modal-name"></h2>
+                <p id="modal-price"></p>
+                <button class="add-to-cart" id="modal-add-to-cart">Add to Cart</button>
+            </div>
+        </div>
+    </div>
+
     <footer>
         <div class="container">
             <div class="footer-content">
                 <div class="footer-section">
-                    <h3 class="logo">WristUp</h3>
+                    <h3>WristUp</h3>
                     <p>Handmade clay bead bracelets for every style and occasion.</p>
                     <div class="social-links">
-                        <a href="#"><i class="fab fa-instagram"></i></a>
-                        <a href="#"><i class="fab fa-facebook"></i></a>
-                        <a href="#"><i class="fab fa-tiktok"></i></a>
+                        <a href="#">📘</a>
+                        <a href="#">🐦</a>
+                        <a href="#">📷</a>
                     </div>
                 </div>
                 <div class="footer-section">
@@ -107,7 +120,7 @@
                 </div>
             </div>
             <div class="copyright">
-                <p>&copy; 2025 WristUp. All rights reserved.</p>
+                © 2025 WristUp. All rights reserved.
             </div>
         </div>
     </footer>
