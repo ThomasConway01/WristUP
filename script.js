@@ -237,7 +237,7 @@ function loadProducts(category, sortOption = "featured") {
       { id: 6, name: "Custom", price: 1.5, images: ["images/custom.png"] },
       { id: 7, name: "Fruit n Toot", price: 1.0, images: ["images/fruit-n-toot.png", "images/fruit-n-toot-2.png"] },
       { id: 8, name: "Aloha", price: 1.0, images: ["images/aloha.png"] },
-      { id: 9, name: "Turtles On The Horizon", price: 1.25, images: ["images/turtles-on-the-horizon0.png", "turtles-on-the-horizon1.png", "turtles-on-the-horizon2.png"] }
+      { id: 9, name: "Turtles On The Horizon", price: 1.25, images: ["images/turtles-on-the-horizon0.png", "turtles-on-the-horizon1.png", "turtles-on-the-horizon2.png"] },
     ]
   } else if (category === "mystery-boxes") {
     containerId = "mystery-box-products"
@@ -245,7 +245,6 @@ function loadProducts(category, sortOption = "featured") {
       { id: 101, name: "Mystery Box - Mini", price: 1.5, images: ["images/mystery-mini.png", "images/mystery-mini-2.png"] },
       { id: 102, name: "Mystery Box - Regular", price: 2.5, images: ["images/mystery-regular.png", "images/mystery-regular-2.png"] },
       { id: 103, name: "Mystery Box - Large", price: 3.99, images: ["images/mystery-large.png", "images/mystery-large-2.png"] },
-      { id: 104, name: "Example Mystery Box", price: 2.0, images: ["images/example-mystery-box.png", "images/example-mystery-box-2.png", "images/example-mystery-box-3.png"] },
     ]
   } else if (category === "seasonal") {
     containerId = "seasonal-products"
@@ -253,7 +252,6 @@ function loadProducts(category, sortOption = "featured") {
       { id: 201, name: "Summer Vibes", price: 2.0, images: ["images/summer-vibes-bracelet.png", "images/summer-vibes-2.png"] },
       { id: 202, name: "Pink Lemonade", price: 1.25, images: ["images/pink-lemonade.png", "images/pink-lemonade-2.png"] },
       { id: 203, name: "Summer Salt", price: 1.2, images: ["images/summer-salt.png", "images/summer-salt-2.png"] },
-      { id: 204, name: "Example Seasonal Bracelet", price: 1.5, images: ["images/example-seasonal-bracelet.png", "images/example-seasonal-bracelet-2.png", "images/example-seasonal-bracelet-3.png"] },
     ]
   }
 
@@ -303,19 +301,17 @@ function showProductModal(productId) {
       { id: 6, name: "Custom", price: 1.5, images: ["images/custom.png"] },
       { id: 7, name: "Fruit n Toot", price: 1.0, images: ["images/fruit-n-toot.png", "images/fruit-n-toot-2.png"] },
       { id: 8, name: "Aloha", price: 1.0, images: ["images/aloha.png"] },
-      { id: 9, name: "Example Bracelet", price: 1.25, images: ["images/example-bracelet.png", "images/example-bracelet-2.png", "images/example-bracelet-3.png"] },
+      { id: 9, name: "Turtles On The Horizon", price: 1.25, images: ["images/turtles-on-the-horizon0.png", "turtles-on-the-horizon1.png", "turtles-on-the-horizon2.png"] },
     ],
     ...[
       { id: 101, name: "Mystery Box - Mini", price: 1.5, images: ["images/mystery-mini.png", "images/mystery-mini-2.png"] },
       { id: 102, name: "Mystery Box - Regular", price: 2.5, images: ["images/mystery-regular.png", "images/mystery-regular-2.png"] },
       { id: 103, name: "Mystery Box - Large", price: 3.99, images: ["images/mystery-large.png", "images/mystery-large-2.png"] },
-      { id: 104, name: "Example Mystery Box", price: 2.0, images: ["images/example-mystery-box.png", "images/example-mystery-box-2.png", "images/example-mystery-box-3.png"] },
     ],
     ...[
       { id: 201, name: "Summer Vibes", price: 2.0, images: ["images/summer-vibes-bracelet.png", "images/summer-vibes-2.png"] },
       { id: 202, name: "Pink Lemonade", price: 1.25, images: ["images/pink-lemonade.png", "images/pink-lemonade-2.png"] },
       { id: 203, name: "Summer Salt", price: 1.2, images: ["images/summer-salt.png", "images/summer-salt-2.png"] },
-      { id: 204, name: "Example Seasonal Bracelet", price: 1.5, images: ["images/example-seasonal-bracelet.png", "images/example-seasonal-bracelet-2.png", "images/example-seasonal-bracelet-3.png"] },
     ],
   ]
 
