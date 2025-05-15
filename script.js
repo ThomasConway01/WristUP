@@ -237,7 +237,7 @@ if (category === "main-shop") {
       { id: 6, name: "Custom", price: 1.5, images: ["images/custom.png"] },
       { id: 7, name: "Fruit n Toot", price: 1.0, images: ["images/fruit-n-toot.png"] },
       { id: 8, name: "Aloha", price: 1.0, images: ["images/aloha.png"] },
-      { id: 9, name: "Turtles On The Horizon", price: 1.25, images: ["images/turtles-on-the-horizon0.png", "turtles-on-the-horizon1.png", "turtles-on-the-horizon2.png"] },
+      { id: 9, name: "Turtles On The Horizon", price: 1.25, images: ["images/turtles-on-the-horizon0.png", "images/turtles-on-the-horizon1.png", "images/turtles-on-the-horizon2.png"] },
     ]
   } else if (category === "mystery-boxes") {
     containerId = "mystery-box-products"
