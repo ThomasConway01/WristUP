@@ -220,16 +220,15 @@ function loadFeaturedProducts() {
   })
 }
 
-// Function to load products
+// function to load products
 function loadProducts(category, sortOption = "featured") {
-  let containerId
-  let products = []
+  let containerId;
+  let products = [];
 
-  // Determine which container to use based on category
-if (category === "main-shop") {
-    containerId = "main-shop-products"
+  if (category === "main-shop") {
+    containerId = "main-shop-products";
     products = [
-      { id: 1, name: "Starry Beach", price: 1.0, images: ["images/starry-beach.png", "images/starry-beach-3.png"] },
+      { id: 1, name: "Starry Beach", price: 1.0, images: ["images/starry-beach.png"] },
       { id: 2, name: "Summer Flowers", price: 1.5, images: ["images/summer-flowers.png"] },
       { id: 3, name: "Neon Pearls", price: 1.0, images: ["images/neon-pearls.png"] },
       { id: 4, name: "Smiley Pink", price: 1.0, images: ["images/smiley-pink.png"] },
@@ -238,61 +237,76 @@ if (category === "main-shop") {
       { id: 7, name: "Fruit n Toot", price: 1.0, images: ["images/fruit-n-toot.png"] },
       { id: 8, name: "Aloha", price: 1.0, images: ["images/aloha.png"] },
       { id: 9, name: "Turtles On The Horizon", price: 1.25, images: ["images/turtles-on-the-horizon0.png", "images/turtles-on-the-horizon1.png", "images/turtles-on-the-horizon2.png"] },
-    ]
+    ];
   } else if (category === "mystery-boxes") {
-    containerId = "mystery-box-products"
+    containerId = "mystery-box-products";
     products = [
       { id: 101, name: "Mystery Box - Mini", price: 1.5, images: ["images/mystery-mini.png"] },
-      { id: 102, name: "Mystery Box - Regular", price: 2.5, images: ["images/mystery-regular.png"] },
+      { id: 102, name: "Mystery Box - Regular", price: 2.5, images: ["images/mystery-regular.png", "images/mystery-regular-2.png"] },
       { id: 103, name: "Mystery Box - Large", price: 3.99, images: ["images/mystery-large.png"] },
-    ]
+    ];
   } else if (category === "seasonal") {
-    containerId = "seasonal-products"
+    containerId = "seasonal-products";
     products = [
-      { id: 201, name: "Summer Vibes", price: 2.0, images: ["images/summer-vibes-bracelet.png"] },
+      { id: 201, name: "Summer Vibes", price: 2.0, images: ["images/summer-vibes-bracelet.png", "images/summer-vibes-2.png"] },
       { id: 202, name: "Pink Lemonade", price: 1.25, images: ["images/pink-lemonade.png"] },
       { id: 203, name: "Summer Salt", price: 1.2, images: ["images/summer-salt.png"] },
-    ]
-  }
-  const container = document.getElementById(containerId)
-  if (!container) return
-
-  // Sort products if needed
-  if (sortOption === "price-low") {
-    products.sort((a, b) => a.price - b.price)
-  } else if (sortOption === "price-high") {
-    products.sort((a, b) => b.price - b.price)
-  } else if (sortOption === "name-az") {
-    products.sort((a, b) => a.name.localeCompare(b.name))
-  } else if (sortOption === "name-za") {
-    products.sort((a, b) => b.name.localeCompare(a.name))
+    ];
   }
 
-  // Clear container and display products
-  container.innerHTML = ""
+  const container = document.getElementById(containerId);
+  if (!container) return;
 
-  products.forEach((product) => {
-    const productCard = document.createElement("div")
-    productCard.className = "product-card"
-    productCard.innerHTML = `
+  // Sort products
+  switch (sortOption) {
+    case "price-low":
+      products.sort((a, b) => a.price - b.price);
+      break;
+    case "price-high":
+      products.sort((a, b) => b.price - a.price);
+      break;
+    case "name-az":
+      products.sort((a, b) => a.name.localeCompare(b.name));
+      break;
+    case "name-za":
+      products.sort((a, b) => b.name.localeCompare(a.name));
+      break;
+  }
+
+  // Render products
+  container.innerHTML = "";
+  products.forEach(product => {
+    const firstImage = product.images && product.images.length ? product.images[0] : "images/default.png";
+
+    const card = document.createElement("div");
+    card.className = "product-card";
+    card.innerHTML = `
       <div class="product-image">
-        <img src="${product.images[0]}" alt="${product.name}">
+        <img src="${firstImage}" alt="${product.name}">
       </div>
       <div class="product-info">
         <h3 class="product-name">${product.name}</h3>
         <p class="product-price">£${product.price.toFixed(2)}</p>
-        <button class="add-to-cart" data-id="${product.id}" data-name="${product.name}" data-price="${product.price}" data-image="${product.images[0]}">Add to Cart</button>
+        <button 
+          class="add-to-cart" 
+          data-id="${product.id}" 
+          data-name="${product.name}" 
+          data-price="${product.price}" 
+          data-image="${firstImage}">
+          Add to Cart
+        </button>
       </div>
-    `
-    container.appendChild(productCard)
-  })
+    `;
+    container.appendChild(card);
+  });
 }
+
 
 // Show product modal
 function showProductModal(productId) {
   const allProducts = [
     ...[
-      { id: 1, name: "Starry Beach", price: 1.0, images: ["images/starry-beach.png", "images/starry-beach-3.png"] },
+      { id: 1, name: "Starry Beach", price: 1.0, images: ["images/starry-beach.png"] },
       { id: 2, name: "Summer Flowers", price: 1.5, images: ["images/summer-flowers.png"] },
       { id: 3, name: "Neon Pearls", price: 1.0, images: ["images/neon-pearls.png"] },
       { id: 4, name: "Smiley Pink", price: 1.0, images: ["images/smiley-pink.png"] },
@@ -300,7 +314,7 @@ function showProductModal(productId) {
       { id: 6, name: "Custom", price: 1.5, images: ["images/custom.png"] },
       { id: 7, name: "Fruit n Toot", price: 1.0, images: ["images/fruit-n-toot.png"] },
       { id: 8, name: "Aloha", price: 1.0, images: ["images/aloha.png"] },
-      { id: 9, name: "Turtles On The Horizon", price: 1.25, images: ["images/turtles-on-the-horizon0.png", "turtles-on-the-horizon1.png", "turtles-on-the-horizon2.png"] },
+      { id: 9, name: "Turtles On The Horizon", price: 1.25, images: ["images/turtles-on-the-horizon0.png", "images/turtles-on-the-horizon1.png", "images/turtles-on-the-horizon2.png"] },
     ],
     ...[
       { id: 101, name: "Mystery Box - Mini", price: 1.5, images: ["images/mystery-mini.png"] },
