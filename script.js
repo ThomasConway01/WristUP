@@ -226,35 +226,34 @@ function loadProducts(category, sortOption = "featured") {
   let products = []
 
   // Determine which container to use based on category
-  if (category === "main-shop") {
+if (category === "main-shop") {
     containerId = "main-shop-products"
     products = [
-      { id: 1, name: "Starry Beach", price: 1.0, images: ["images/starry-beach.png", "images/starry-beach-2.png", "images/starry-beach-3.png"] },
-      { id: 2, name: "Summer Flowers", price: 1.5, images: ["images/summer-flowers.png", "images/summer-flowers-2.png"] },
+      { id: 1, name: "Starry Beach", price: 1.0, images: ["images/starry-beach.png", "images/starry-beach-3.png"] },
+      { id: 2, name: "Summer Flowers", price: 1.5, images: ["images/summer-flowers.png"] },
       { id: 3, name: "Neon Pearls", price: 1.0, images: ["images/neon-pearls.png"] },
       { id: 4, name: "Smiley Pink", price: 1.0, images: ["images/smiley-pink.png"] },
       { id: 5, name: "Midnight Stars Bundle", price: 1.5, images: ["images/midnight-stars.png"] },
       { id: 6, name: "Custom", price: 1.5, images: ["images/custom.png"] },
-      { id: 7, name: "Fruit n Toot", price: 1.0, images: ["images/fruit-n-toot.png", "images/fruit-n-toot-2.png"] },
+      { id: 7, name: "Fruit n Toot", price: 1.0, images: ["images/fruit-n-toot.png"] },
       { id: 8, name: "Aloha", price: 1.0, images: ["images/aloha.png"] },
       { id: 9, name: "Turtles On The Horizon", price: 1.25, images: ["images/turtles-on-the-horizon0.png", "turtles-on-the-horizon1.png", "turtles-on-the-horizon2.png"] },
     ]
   } else if (category === "mystery-boxes") {
     containerId = "mystery-box-products"
     products = [
-      { id: 101, name: "Mystery Box - Mini", price: 1.5, images: ["images/mystery-mini.png", "images/mystery-mini-2.png"] },
-      { id: 102, name: "Mystery Box - Regular", price: 2.5, images: ["images/mystery-regular.png", "images/mystery-regular-2.png"] },
-      { id: 103, name: "Mystery Box - Large", price: 3.99, images: ["images/mystery-large.png", "images/mystery-large-2.png"] },
+      { id: 101, name: "Mystery Box - Mini", price: 1.5, images: ["images/mystery-mini.png"] },
+      { id: 102, name: "Mystery Box - Regular", price: 2.5, images: ["images/mystery-regular.png"] },
+      { id: 103, name: "Mystery Box - Large", price: 3.99, images: ["images/mystery-large.png"] },
     ]
   } else if (category === "seasonal") {
     containerId = "seasonal-products"
     products = [
-      { id: 201, name: "Summer Vibes", price: 2.0, images: ["images/summer-vibes-bracelet.png", "images/summer-vibes-2.png"] },
-      { id: 202, name: "Pink Lemonade", price: 1.25, images: ["images/pink-lemonade.png", "images/pink-lemonade-2.png"] },
-      { id: 203, name: "Summer Salt", price: 1.2, images: ["images/summer-salt.png", "images/summer-salt-2.png"] },
+      { id: 201, name: "Summer Vibes", price: 2.0, images: ["images/summer-vibes-bracelet.png"] },
+      { id: 202, name: "Pink Lemonade", price: 1.25, images: ["images/pink-lemonade.png"] },
+      { id: 203, name: "Summer Salt", price: 1.2, images: ["images/summer-salt.png"] },
     ]
   }
-
   const container = document.getElementById(containerId)
   if (!container) return
 
@@ -293,25 +292,25 @@ function loadProducts(category, sortOption = "featured") {
 function showProductModal(productId) {
   const allProducts = [
     ...[
-      { id: 1, name: "Starry Beach", price: 1.0, images: ["images/starry-beach.png", "images/starry-beach-2.png", "images/starry-beach-3.png"] },
-      { id: 2, name: "Summer Flowers", price: 1.5, images: ["images/summer-flowers.png", "images/summer-flowers-2.png"] },
+      { id: 1, name: "Starry Beach", price: 1.0, images: ["images/starry-beach.png", "images/starry-beach-3.png"] },
+      { id: 2, name: "Summer Flowers", price: 1.5, images: ["images/summer-flowers.png"] },
       { id: 3, name: "Neon Pearls", price: 1.0, images: ["images/neon-pearls.png"] },
       { id: 4, name: "Smiley Pink", price: 1.0, images: ["images/smiley-pink.png"] },
       { id: 5, name: "Midnight Stars Bundle", price: 1.5, images: ["images/midnight-stars.png"] },
       { id: 6, name: "Custom", price: 1.5, images: ["images/custom.png"] },
-      { id: 7, name: "Fruit n Toot", price: 1.0, images: ["images/fruit-n-toot.png", "images/fruit-n-toot-2.png"] },
+      { id: 7, name: "Fruit n Toot", price: 1.0, images: ["images/fruit-n-toot.png"] },
       { id: 8, name: "Aloha", price: 1.0, images: ["images/aloha.png"] },
       { id: 9, name: "Turtles On The Horizon", price: 1.25, images: ["images/turtles-on-the-horizon0.png", "turtles-on-the-horizon1.png", "turtles-on-the-horizon2.png"] },
     ],
     ...[
-      { id: 101, name: "Mystery Box - Mini", price: 1.5, images: ["images/mystery-mini.png", "images/mystery-mini-2.png"] },
-      { id: 102, name: "Mystery Box - Regular", price: 2.5, images: ["images/mystery-regular.png", "images/mystery-regular-2.png"] },
-      { id: 103, name: "Mystery Box - Large", price: 3.99, images: ["images/mystery-large.png", "images/mystery-large-2.png"] },
+      { id: 101, name: "Mystery Box - Mini", price: 1.5, images: ["images/mystery-mini.png"] },
+      { id: 102, name: "Mystery Box - Regular", price: 2.5, images: ["images/mystery-regular.png"] },
+      { id: 103, name: "Mystery Box - Large", price: 3.99, images: ["images/mystery-large.png"] },
     ],
     ...[
-      { id: 201, name: "Summer Vibes", price: 2.0, images: ["images/summer-vibes-bracelet.png", "images/summer-vibes-2.png"] },
-      { id: 202, name: "Pink Lemonade", price: 1.25, images: ["images/pink-lemonade.png", "images/pink-lemonade-2.png"] },
-      { id: 203, name: "Summer Salt", price: 1.2, images: ["images/summer-salt.png", "images/summer-salt-2.png"] },
+      { id: 201, name: "Summer Vibes", price: 2.0, images: ["images/summer-vibes-bracelet.png"] },
+      { id: 202, name: "Pink Lemonade", price: 1.25, images: ["images/pink-lemonade.png"] },
+      { id: 203, name: "Summer Salt", price: 1.2, images: ["images/summer-salt.png"] },
     ],
   ]
 
